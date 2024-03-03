@@ -3,10 +3,10 @@ name = "combine-combinator"
 version = "0.1.0"
 description = ""
 authors = ["Trubin <trybin420@gmail.com>"]
-readme = "README.md"
 packages = [{ include = "models", from = "src" },
             { include = "service", from = "src" },
-            { include = "api", from = "src" },]
+            { include = "api", from = "src" },
+            { include = "data", from = "src" },]
 
 [tool.poetry.dependencies]
 python = "^3.10"
