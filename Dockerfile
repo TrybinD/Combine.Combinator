@@ -7,8 +7,8 @@ RUN mkdir -p /app/models
 COPY pyproject.toml /app
 COPY poetry.lock /app
 COPY main.py /app
+COPY config.py /app
 COPY ./src /app/src
-COPY ./data /app/data
 
 WORKDIR /app
 RUN poetry config virtualenvs.in-project true
