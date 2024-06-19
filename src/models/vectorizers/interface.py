@@ -1,7 +1,7 @@
-from abc import ABC, abstractclassmethod
+from abc import ABC, abstractmethod
 
 class VectorizorInterface(ABC):
     
-    @abstractclassmethod
+    @abstractmethod
     def vectorize(self, descriptions_list):
         raise NotImplementedError
