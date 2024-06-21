@@ -22,6 +22,8 @@ def start_search_process_to_team(team_id):
     users = UserInSearchRepository().get(event_id=team.event_id, is_active=True)
 
     users_descriptions = {user.user_id: user.description for user in users}
+    users_in_search_id_mapping = {user.user_id: user.id for user in users}
+
     teams_descriptions = {team.id: {"name": team.name, "description": team.description}}
 
     recommendations = recommendation_service.get_recommendations(users_descriptions,
@@ -29,7 +31,7 @@ def start_search_process_to_team(team_id):
     
     for reco in recommendations:
         UserTeamRecommendationsRepository().add(data={"team_id": reco["team_id"],
-                                                      "user_in_search_id": reco["user_id"]})
+                                                      "user_in_search_id": users_in_search_id_mapping[reco["user_id"]]})
         
         requests.post(config.BOT_URL + "/message/send/", json={"message": "Мы нашли тебе новые варианты команды, посмотри скорее",
                                                                "user_id": reco["user_id"]})
@@ -46,6 +48,7 @@ def start_search_process_to_user(user_in_search_id):
     teams = TeamRepository().get(event_id=user.event_id, is_active=True)
 
     users_descriptions = {user.user_id: user.description}
+
     teams_descriptions = {team.id: {"name": team.name, "description": team.description} for team in teams}
 
     teams_creator_mapping = {team.id: team.creator_id for team in teams}
@@ -55,7 +58,7 @@ def start_search_process_to_user(user_in_search_id):
     
     for reco in recommendations:
         UserTeamRecommendationsRepository().add(data={"team_id": reco["team_id"],
-                                                      "user_in_search_id": reco["user_id"]})
+                                                      "user_in_search_id": user.id})
         
         requests.post(config.BOT_URL + "/message/send/", json={"message": "Мы нашли тебе новых людей в команду, посмотри скорее!",
                                                                "user_id": teams_creator_mapping[reco["team_id"]]})
