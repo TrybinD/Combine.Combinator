@@ -1,19 +1,25 @@
+from pathlib import Path
 import requests
 
 from fastapi import APIRouter, BackgroundTasks
 
 from service.recommendation_service import UserTeamRecommendationService
-from models.vectorizers import RandomVectorizor
-from models.combinators import RandomCombinator
+from models.vectorizers import NavecVectorizor
+from models.combinators.xgboost_combinator import XGBoostCombinator
 
 from data.repositories import UserInSearchRepository, TeamRepository, UserTeamRecommendationsRepository
 import config
 
 router = APIRouter()
 
-recommendation_service = UserTeamRecommendationService(users_vectorizer=RandomVectorizor(n_dims=128), 
-                                                       teams_vectorizer=RandomVectorizor(n_dims=128),
-                                                       combinator=RandomCombinator(random_treshold=0.9))
+vectorizor = NavecVectorizor(Path("models/navec_news_v1_1B_250K_300d_100q.tar"))
+combinator = XGBoostCombinator(model_path=Path("model/xgb_combinator.pkl"), 
+                               preprocessor_path=Path("model/preprocessor_v14.pkl"),
+                               threshold=0.85)
+
+recommendation_service = UserTeamRecommendationService(users_vectorizer=vectorizor, 
+                                                       teams_vectorizer=vectorizor,
+                                                       combinator=combinator)
 
 def start_search_process_to_team(team_id):
 

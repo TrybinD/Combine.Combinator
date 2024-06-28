@@ -19,6 +19,14 @@ sqlalchemy = "^2.0.31"
 requests = "^2.32.3"
 psycopg2-binary = "^2.9.9"
 
+[tool.poetry.group.ml.dependencies]
+scikit-learn = "^1.5.0"
+navec = "^0.10.0"
+
+
+[tool.poetry.group.dl.dependencies]
+torch = "^2.3.1"
+transformers = "^4.42.1"
 
 [build-system]
 requires = ["poetry-core"]
